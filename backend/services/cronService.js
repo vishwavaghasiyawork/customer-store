@@ -8,12 +8,23 @@ class CronService {
 
   startOrderSyncCron() {
     // Run every minute: '* * * * *'
+    let consecutiveErrors = 0;
+    const maxErrors = 5; // Stop after 5 consecutive errors
+    
     const task = cron.schedule('* * * * *', async () => {
       try {
         console.log('Running scheduled order sync...');
         await orderService.syncOrders();
+        consecutiveErrors = 0; // Reset error counter on success
       } catch (error) {
-        console.error('Scheduled order sync failed:', error.message);
+        consecutiveErrors++;
+        console.error(`Scheduled order sync failed (${consecutiveErrors}/${maxErrors}):`, error.message);
+        
+        // Stop cron job after max consecutive errors
+        if (consecutiveErrors >= maxErrors) {
+          console.error('Stopping order sync cron job due to repeated failures. Please check your Shopify credentials.');
+          this.stopTask('orderSync');
+        }
       }
     }, {
       scheduled: false

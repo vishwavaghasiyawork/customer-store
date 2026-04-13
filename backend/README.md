@@ -58,6 +58,82 @@ Retrieve a specific order by Shopify ID.
 ### GET /api/orders/email/:email
 Retrieve all orders for a specific customer email.
 
+## Sales Report API
+
+### GET /api/reports/sales/generate
+Generate professional sales report in CSV format with comprehensive order data.
+
+**Query Parameters:**
+- `startDate` (optional): Filter orders from this date (YYYY-MM-DD format)
+- `endDate` (optional): Filter orders until this date (YYYY-MM-DD format)  
+- `status` (optional): Filter by order status (pending, paid, cancelled, etc.)
+- `format` (optional): Output format (default: csv)
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "filename": "sales_report_2026-04-13T15-30-00.csv",
+    "totalOrders": 150,
+    "summary": {
+      "totalRevenue": 45678.90,
+      "totalOrders": 150,
+      "averageOrderValue": 304.53,
+      "totalTax": 1234.56,
+      "totalShipping": 890.12,
+      "totalDiscount": 234.56,
+      "ordersByStatus": { "paid": 120, "pending": 30 },
+      "ordersByPaymentMethod": { "COD": 80, "Credit Card": 70 },
+      "topProducts": { "Product A": 25, "Product B": 20 },
+      "ordersByMonth": { "2026-04": 150 },
+      "customersCount": 120
+    },
+    "generatedAt": "2026-04-13T15:30:00.000Z"
+  }
+}
+```
+
+### GET /api/reports/download/:filename
+Download a generated report file.
+
+### GET /api/reports/list
+Get list of all generated reports with file metadata.
+
+### DELETE /api/reports/:filename
+Delete a specific report file.
+
+## CSV Report Fields
+
+The sales report includes 20 professional fields:
+
+1. Order ID
+2. Order Number  
+3. Customer Email
+4. Customer Name
+5. Customer Phone
+6. Order Date
+7. Order Status
+8. Financial Status
+9. Fulfillment Status
+10. Currency
+11. Total Price
+12. Subtotal Price
+13. Total Tax
+14. Shipping Price
+15. Total Discount
+16. Payment Method
+17. Billing Address
+18. Shipping Address
+19. Product Count
+20. Product Names
+21. Product SKUs
+22. Product Quantities
+23. Product Prices
+24. Tags
+25. Created At
+26. Updated At
+
 ## Webhook Setup
 
 1. Add webhook secret to `.env`:

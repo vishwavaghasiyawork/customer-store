@@ -330,7 +330,6 @@ const orderSchema = new mongoose.Schema({
   timestamps: true
 });
 
-orderSchema.index({ shopifyOrderId: 1 }, { unique: true });
 orderSchema.index({ created_at: -1 });
 orderSchema.index({ email: 1 });
 

@@ -5,6 +5,7 @@ import connectDB from './config/database.js';
 import customerRoutes from './routes/customerRoutes.js';
 import webhookRoutes from './routes/webhookRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
+import reportRoutes from './routes/reportRoutes.js';
 import cronService from './services/cronService.js';
 import { rawBodyParser } from './middleware/webhookMiddleware.js';
 
@@ -30,6 +31,7 @@ app.use(express.urlencoded({ extended: true }));
 // 3) Other routes
 app.use('/api/customers', customerRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/api/reports', reportRoutes);
 
 app.get('/health', (req, res) => {
   res.json({
@@ -61,16 +63,6 @@ connectDB().then(() => {
   app.listen(PORT, async () => {
     console.log(`Shopify Customer API server running on port ${PORT}`);
     console.log(`Health check: http://localhost:${PORT}/health`);
-    console.log(`Customer creation: POST http://localhost:${PORT}/api/customers/create`);
-    console.log(`Dummy customer: POST http://localhost:${PORT}/api/customers/create-dummy`);
-    console.log(`Get all customers: GET http://localhost:${PORT}/api/customers/all`);
-    console.log(`Webhook setup: POST http://localhost:${PORT}/webhooks/setup`);
-    console.log(`Customer webhook: POST http://localhost:${PORT}/webhooks/customers/create`);
-    console.log(`Order sync: POST http://localhost:${PORT}/api/orders/sync`);
-    console.log(`Get all orders: GET http://localhost:${PORT}/api/orders/all`);
-    console.log(`Get order by ID: GET http://localhost:${PORT}/api/orders/shopify/:shopifyId`);
-    console.log(`Get orders by email: GET http://localhost:${PORT}/api/orders/email/:email`);
-    
     // Start cron jobs
     cronService.startAllTasks();
   });
