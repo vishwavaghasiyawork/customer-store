@@ -1,5 +1,5 @@
 import cron from 'node-cron';
-import orderService from './orderService.js';
+import csvOrderSyncService from './csvOrderSyncService.js';
 
 class CronService {
   constructor() {
@@ -13,16 +13,16 @@ class CronService {
     
     const task = cron.schedule('* * * * *', async () => {
       try {
-        console.log('Running scheduled order sync...');
-        await orderService.syncOrders();
+        console.log('Running scheduled CSV order sync...');
+        await csvOrderSyncService.syncOrders();
         consecutiveErrors = 0; // Reset error counter on success
       } catch (error) {
         consecutiveErrors++;
-        console.error(`Scheduled order sync failed (${consecutiveErrors}/${maxErrors}):`, error.message);
+        console.error(`Scheduled CSV order sync failed (${consecutiveErrors}/${maxErrors}):`, error.message);
         
         // Stop cron job after max consecutive errors
         if (consecutiveErrors >= maxErrors) {
-          console.error('Stopping order sync cron job due to repeated failures. Please check your Shopify credentials.');
+          console.error('Stopping CSV order sync cron job due to repeated failures. Please check your Shopify credentials.');
           this.stopTask('orderSync');
         }
       }

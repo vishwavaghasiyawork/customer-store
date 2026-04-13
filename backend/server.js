@@ -1,11 +1,12 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
 import { validateConfig, config } from './config/env.js';
 import connectDB from './config/database.js';
 import customerRoutes from './routes/customerRoutes.js';
 import webhookRoutes from './routes/webhookRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
-import reportRoutes from './routes/reportRoutes.js';
+import csvReportRoutes from './routes/csvReportRoutes.js';
 import cronService from './services/cronService.js';
 import { rawBodyParser } from './middleware/webhookMiddleware.js';
 
@@ -31,7 +32,13 @@ app.use(express.urlencoded({ extended: true }));
 // 3) Other routes
 app.use('/api/customers', customerRoutes);
 app.use('/api/orders', orderRoutes);
-app.use('/api/reports', reportRoutes);
+app.use('/api/csv-reports', csvReportRoutes);
+
+// Serve static files from data directory
+app.use('/data', express.static(path.join(process.cwd(), 'data')));
+
+// Serve static files from reports directory
+app.use('/reports', express.static(path.join(process.cwd(), 'reports')));
 
 app.get('/health', (req, res) => {
   res.json({
