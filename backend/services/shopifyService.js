@@ -14,7 +14,7 @@ class ShopifyService {
     if (!config.shopify.accessToken) {
       throw new Error('Shopify Admin access token is not configured.');
     }
-
+    
     this.client = axios.create({
       baseURL: graphQLEndpoint, // e.g. https://aurevia-dev-store.myshopify.com/admin/api/latest/graphql.json
       headers: {
@@ -56,6 +56,8 @@ class ShopifyService {
           input: customerInput,
         },
       });
+
+      console.log({accessTokens: config.shopify.accessToken});
 
       console.log('HTTP status:', response.status);
       console.log('HTTP headers:', response.headers);

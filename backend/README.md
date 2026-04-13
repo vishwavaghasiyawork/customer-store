@@ -40,6 +40,31 @@ Create a customer with dummy data and sync to MongoDB.
 ### GET /api/customers/all
 Retrieve all customers from MongoDB.
 
+### POST /webhooks/setup
+Create Shopify customer webhook automatically.
+
+### POST /webhooks/customers/create
+Webhook endpoint to receive customer creation events from Shopify.
+
+## Webhook Setup
+
+1. Add webhook secret to `.env`:
+   ```
+   SHOPIFY_WEBHOOK_SECRET=your-webhook-secret
+   ```
+
+2. Setup webhook:
+   ```bash
+   npm run setup-webhook
+   ```
+
+3. Or setup manually via API:
+   ```bash
+   POST /webhooks/setup
+   ```
+
+## API Endpoints
+
 ### POST /api/customers/create
 **Request Body:**
 ```json
