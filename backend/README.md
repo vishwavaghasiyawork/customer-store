@@ -46,6 +46,18 @@ Create Shopify customer webhook automatically.
 ### POST /webhooks/customers/create
 Webhook endpoint to receive customer creation events from Shopify.
 
+### POST /api/orders/sync
+Manually trigger order sync from Shopify to MongoDB.
+
+### GET /api/orders/all
+Retrieve all orders from MongoDB.
+
+### GET /api/orders/shopify/:shopifyId
+Retrieve a specific order by Shopify ID.
+
+### GET /api/orders/email/:email
+Retrieve all orders for a specific customer email.
+
 ## Webhook Setup
 
 1. Add webhook secret to `.env`:
@@ -125,6 +137,15 @@ The API returns structured error responses:
   "error": "Error message"
 }
 ```
+
+## Automated Order Sync
+
+The server automatically syncs orders from Shopify to MongoDB every minute using cron jobs:
+
+- **Frequency**: Every minute (`* * * * *`)
+- **Deduplication**: Orders are upserted based on `shopifyOrderId`
+- **Update Logic**: Only updates if Shopify timestamp is newer than local timestamp
+- **Logging**: Detailed logs for created, updated, skipped, and error orders
 
 ## Security
 
