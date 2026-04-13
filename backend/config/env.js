@@ -6,15 +6,15 @@ export const config = {
   shopify: {
     storeUrl: process.env.SHOPIFY_STORE_URL,
     accessToken: process.env.SHOPIFY_ACCESS_TOKEN,
-    apiVersion: '2025-07',
+    apiVersion: '2026-04',
     // config.shopify.graphQLEndpoint
 graphQLEndpoint: (storeUrl) => {
   const cleanStoreUrl = storeUrl
     .replace(/^https?:\/\//, '')
     .replace(/\/$/, '');
 
-  // 'latest' automatically becomes 2025-07 for this store, per your headers
-  return `https://${cleanStoreUrl}/admin/api/2025-07/graphql.json`;
+  // 'latest' automatically becomes 2026-04 for this store, per your headers
+  return `https://${cleanStoreUrl}/admin/api/2026-04/graphql.json`;
 },
   },
   server: {
