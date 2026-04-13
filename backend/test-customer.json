@@ -1,0 +1,24 @@
+{
+  "input": {
+    "firstName": "Bob",
+    "lastName": "Norman",
+    "email": "bob.norman@mail.example.com",
+    "phone": "+15145555555",
+    "tags": ["wholesale", "newsletter"],
+    "addresses": [
+      {
+        "address1": "123 Oak St",
+        "city": "Ottawa",
+        "province": "Ontario",
+        "zip": "123 ABC",
+        "country": "Canada",
+        "firstName": "Bob",
+        "lastName": "Norman",
+        "phone": "555-1212"
+      }
+    ],
+    "emailMarketingConsent": {
+      "marketingState": "SUBSCRIBED"
+    }
+  }
+}
