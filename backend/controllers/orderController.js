@@ -1,14 +1,14 @@
-import orderService from '../services/orderService.js';
+import combinedOrderSyncService from '../services/combinedOrderSyncService.js';
 
 export const syncOrders = async (req, res) => {
   try {
-    console.log('Manual order sync triggered...');
-    const results = await orderService.syncOrders();
+    console.log('Manual combined order sync triggered (MongoDB + CSV)...');
+    const results = await combinedOrderSyncService.syncOrders();
     
     res.status(200).json({
       success: true,
       data: results,
-      message: 'Order sync completed successfully'
+      message: 'Combined order sync completed successfully (MongoDB + CSV)'
     });
   } catch (error) {
     console.error('Manual order sync failed:', error.message);
@@ -22,12 +22,12 @@ export const syncOrders = async (req, res) => {
 
 export const getAllOrders = async (req, res) => {
   try {
-    const orders = await orderService.getAllOrders();
+    const orders = await combinedOrderSyncService.getAllOrders();
     
     res.status(200).json({
       success: true,
       data: orders,
-      message: 'Orders retrieved successfully'
+      message: 'Orders retrieved successfully from MongoDB'
     });
   } catch (error) {
     console.error('Error retrieving orders:', error.message);
@@ -50,7 +50,7 @@ export const getOrderByShopifyId = async (req, res) => {
       });
     }
 
-    const order = await orderService.getOrderByShopifyId(parseInt(shopifyId));
+    const order = await combinedOrderSyncService.getOrderByShopifyId(parseInt(shopifyId));
     
     if (!order) {
       return res.status(404).json({
@@ -62,7 +62,7 @@ export const getOrderByShopifyId = async (req, res) => {
     res.status(200).json({
       success: true,
       data: order,
-      message: 'Order retrieved successfully'
+      message: 'Order retrieved successfully from MongoDB'
     });
   } catch (error) {
     console.error('Error retrieving order:', error.message);
@@ -85,12 +85,12 @@ export const getOrdersByEmail = async (req, res) => {
       });
     }
 
-    const orders = await orderService.getOrdersByEmail(email);
+    const orders = await combinedOrderSyncService.getOrdersByEmail(email);
     
     res.status(200).json({
       success: true,
       data: orders,
-      message: 'Orders retrieved successfully'
+      message: 'Orders retrieved successfully from MongoDB'
     });
   } catch (error) {
     console.error('Error retrieving orders by email:', error.message);

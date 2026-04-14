@@ -1,5 +1,5 @@
 import cron from 'node-cron';
-import csvOrderSyncService from './csvOrderSyncService.js';
+import combinedOrderSyncService from './combinedOrderSyncService.js';
 
 class CronService {
   constructor() {
@@ -13,16 +13,16 @@ class CronService {
     
     const task = cron.schedule('* * * * *', async () => {
       try {
-        console.log('Running scheduled CSV order sync...');
-        await csvOrderSyncService.syncOrders();
+        console.log('Running scheduled combined order sync (MongoDB + CSV)...');
+        await combinedOrderSyncService.syncOrders();
         consecutiveErrors = 0; // Reset error counter on success
       } catch (error) {
         consecutiveErrors++;
-        console.error(`Scheduled CSV order sync failed (${consecutiveErrors}/${maxErrors}):`, error.message);
+        console.error(`Scheduled combined order sync failed (${consecutiveErrors}/${maxErrors}):`, error.message);
         
         // Stop cron job after max consecutive errors
         if (consecutiveErrors >= maxErrors) {
-          console.error('Stopping CSV order sync cron job due to repeated failures. Please check your Shopify credentials.');
+          console.error('Stopping combined order sync cron job due to repeated failures. Please check your Shopify credentials.');
           this.stopTask('orderSync');
         }
       }
@@ -41,7 +41,7 @@ class CronService {
     const orderSyncTask = this.startOrderSyncCron();
     orderSyncTask.start();
     
-    console.log('Order sync cron job started (runs every minute)');
+    console.log('Combined order sync cron job started (MongoDB + CSV - runs every minute)');
     console.log(`Total active cron jobs: ${this.tasks.size}`);
   }
 

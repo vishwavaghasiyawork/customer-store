@@ -70,6 +70,19 @@ connectDB().then(() => {
   app.listen(PORT, async () => {
     console.log(`Shopify Customer API server running on port ${PORT}`);
     console.log(`Health check: http://localhost:${PORT}/health`);
+    console.log(`Customer creation: POST http://localhost:${PORT}/api/customers/create`);
+    console.log(`Dummy customer: POST http://localhost:${PORT}/api/customers/create-dummy`);
+    console.log(`Get all customers: GET http://localhost:${PORT}/api/customers/all`);
+    console.log(`Webhook setup: POST http://localhost:${PORT}/webhooks/setup`);
+    console.log(`Customer webhook: POST http://localhost:${PORT}/webhooks/customers/create`);
+    console.log(`Combined order sync: POST http://localhost:${PORT}/api/orders/sync (MongoDB + CSV)`);
+    console.log(`Get all orders: GET http://localhost:${PORT}/api/orders/all`);
+    console.log(`Get order by ID: GET http://localhost:${PORT}/api/orders/shopify/:shopifyId`);
+    console.log(`Get orders by email: GET http://localhost:${PORT}/api/orders/email/:email`);
+    console.log(`Generate CSV report: GET http://localhost:${PORT}/api/csv-reports/generate`);
+    console.log(`Get CSV stats: GET http://localhost:${PORT}/api/csv-reports/stats`);
+    console.log(`List CSV files: GET http://localhost:${PORT}/api/csv-reports/files`);
+    console.log(`Access CSV files: http://localhost:${PORT}/data/filename.csv`);
     // Start cron jobs
     cronService.startAllTasks();
   });
