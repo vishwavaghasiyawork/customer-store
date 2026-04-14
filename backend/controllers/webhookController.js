@@ -18,6 +18,7 @@ export const handleCustomerWebhook = async (req, res) => {
     console.log('Shopify Signature:', shopifySignature);
     console.log('Shopify Topic:', topic);
     console.log('Shopify Shop:', shopDomain);
+    console.log('Is Buffer?', Buffer.isBuffer(rawBody));
 
     const isValid = webhookService.verifyWebhook(rawBody, shopifySignature);
     console.log('Signature valid?', isValid);
@@ -27,11 +28,17 @@ export const handleCustomerWebhook = async (req, res) => {
       return res.status(401).json({ error: 'Invalid signature' });
     }
 
+    // Parse JSON only after HMAC is verified
     const customerData = JSON.parse(rawBody.toString('utf8'));
 
-    console.log(`Received ${topic} webhook for customer:`, customerData.email);
+    console.log(
+      `Received ${topic} webhook for customer:`,
+      customerData.email,
+      'ID:',
+      customerData.id
+    );
 
-    // Upsert will handle both create and update
+    // This will insert on create & update on update
     await webhookCustomerService.upsertCustomer(customerData, shopDomain);
 
     return res.status(200).send('OK');

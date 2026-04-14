@@ -1,36 +1,48 @@
 import WebhookCustomer from '../models/WebhookCustomer.js';
 
 class WebhookCustomerService {
-  async upsertCustomer(customerData) {
-    try {
-      const customerPayload = {
-        shopifyId: customerData.id.toString(),
-        email: customerData.email,
-        firstName: customerData.first_name,
-        lastName: customerData.last_name,
-        phone: customerData.phone,
-        addresses: customerData.addresses || [],
-        ordersCount: customerData.orders_count || 0,
-        totalSpent: parseFloat(customerData.total_spent) || 0,
-        tags: customerData.tags ? customerData.tags.split(', ') : []
-      };
+  async upsertCustomer(customerPayload, shopDomain) {
+    const {
+      id,
+      email,
+      phone,
+      first_name,
+      last_name,
+      created_at,
+      updated_at,
+      default_address,
+      addresses,
+      orders_count,
+      total_spent,
+      tags,
+    } = customerPayload;
 
-      const customer = await WebhookCustomer.findOneAndUpdate(
-        { shopifyId: customerPayload.shopifyId },
-        customerPayload,
-        { 
-          upsert: true, 
-          new: true, 
-          runValidators: true 
-        }
-      );
+    const doc = await WebhookCustomer.findOneAndUpdate(
+      { shopifyId: id },
+      {
+        shopifyId: id,
+        shopDomain,
+        email,
+        phone,
+        firstName: first_name,
+        lastName: last_name,
+        createdAt: created_at,
+        updatedAt: updated_at,
+        defaultAddress: default_address,
+        addresses,
+        ordersCount: orders_count,
+        totalSpent: total_spent,
+        tags: Array.isArray(tags)
+          ? tags
+          : (tags || '')
+              .split(',')
+              .map((t) => t.trim())
+              .filter(Boolean),
+      },
+      { upsert: true, new: true }
+    );
 
-      console.log(`Customer upserted: ${customer.email}`);
-      return customer;
-    } catch (error) {
-      console.error('Error upserting customer:', error);
-      throw error;
-    }
+    console.log('Upserted customer doc:', doc);
   }
 
   async getCustomerByShopifyId(shopifyId) {

@@ -21,7 +21,7 @@ class WebhookService {
   }
 
   verifyWebhook(rawBody, signature) {
-    const secret = process.env.SHOPIFY_WEBHOOK_SECRET;
+    const secret = process.env.SHOPIFY_WEBHOOK_SECRET; // app API secret key
     if (!secret) {
       throw new Error('SHOPIFY_WEBHOOK_SECRET is not configured');
     }
@@ -52,10 +52,11 @@ class WebhookService {
     }
 
     const url = `${this.restBaseUrl}/webhooks.json`;
+
     const body = {
       webhook: {
-        topic, // e.g. 'customers/create' or 'customers/update'
-        address: `${backendUrl}/webhooks/customers`, // single endpoint for both
+        topic, // 'customers/create' or 'customers/update'
+        address: `${backendUrl}/webhooks/customers`, // one endpoint for both
         format: 'json',
       },
     };
@@ -72,16 +73,26 @@ class WebhookService {
 
   async setupCustomerWebhooks() {
     const topics = ['customers/create', 'customers/update'];
-
     const results = [];
+
     for (const topic of topics) {
       try {
         const data = await this.createWebhook(topic);
-        console.log(`Webhook created for ${topic}:`, JSON.stringify(data, null, 2));
+        console.log(
+          `Webhook created for ${topic}:`,
+          JSON.stringify(data, null, 2)
+        );
         results.push({ topic, ok: true, data });
       } catch (error) {
-        console.error(`Error creating webhook for ${topic}:`, error.response?.data || error.message);
-        results.push({ topic, ok: false, error: error.response?.data || error.message });
+        console.error(
+          `Error creating webhook for ${topic}:`,
+          error.response?.data || error.message
+        );
+        results.push({
+          topic,
+          ok: false,
+          error: error.response?.data || error.message,
+        });
       }
     }
 
